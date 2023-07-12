@@ -1,6 +1,9 @@
 <template>
-    <div class="text-green-300 font-bold text-4xl">
-        메인홈
+    <div class="px-8 py-8 ">
+      <p class="text-2xl font-bold">홈</p>
+    </div>
+    <div>
+
     </div>
 </template>
 
@@ -14,7 +17,8 @@ export default {
     },
     methods: {
     },
-    mounted() {
+    created() {
+      this.$parent.$parent.$refs.nav.activeBtn('home');
     }
 };
 </script>

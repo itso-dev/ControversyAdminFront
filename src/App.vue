@@ -1,13 +1,21 @@
 <template>
-  <router-view></router-view>
+  <div class="flex min-w-[1300px] min-h-screen">
+    <Nav ref="nav"/>
+    <div class="w-4/5">
+      <Top />
+      <router-view/>
+    </div>
+  </div>
 </template>
 
 <script>
-import Index from "@/pages/Index.vue";
+import Nav from "@/components/Nav.vue";
+import Top from "@/components/Top.vue";
 
 export default {
   components: {
-    Index
+    Nav,
+    Top,
   },
   setup() {
     return {};

@@ -1,15 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Index from "@/pages/Index.vue";
+import HomeRoutes from "./home.routes.js";
+import MemberRoutes from "./member.routes.js";
+import BannerRoutes from "./banner.routes.js";
+import PopupRoutes from "./popup.routes.js";
+import PaymentRoutes from "./payment.routes.js";
+import BlacklistRoutes from "./blacklist.routes.js";
 import store from "@/_stores";
 
 const routes = [
-    {
-        path: '/',
-        name: 'Index',
-        component: Index,
-        meta: { title: "홈" },
-    },
-]
+        ...HomeRoutes,
+        ...MemberRoutes,
+        ...BannerRoutes,
+        ...PopupRoutes,
+        ...PaymentRoutes,
+        ...BlacklistRoutes,
+    { path: "/:pathMatch(.*)*", redirect: "/" },
+
+];
 
 const router = createRouter({
     history: createWebHistory(),
