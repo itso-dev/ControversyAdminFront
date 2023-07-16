@@ -24,6 +24,27 @@
     <div class="border-b-gray-200 border-b">
       <router-link :to="{ name: 'BlackList', query: {} }" :class="this.active === 'black' ? 'bg-blue-200 font-bold':''" class="w-full px-7 py-3 text-lg cursor-pointer inline-block">블랙리스트 관리</router-link>
     </div>
+    <div class="border-b-gray-200 border-b">
+      <router-link :to="{ name: 'BoardList', query: {} }" :class="this.active === 'board' ? 'bg-blue-200 font-bold':''" class="w-full px-7 py-3 text-lg cursor-pointer inline-block">게시판 관리</router-link>
+    </div>
+    <div class="border-b-gray-200 border-b">
+      <router-link :to="{ name: 'ProjectList', query: {} }" :class="this.active === 'project' ? 'bg-blue-200 font-bold':''" class="w-full px-7 py-3 text-lg cursor-pointer inline-block">프로젝트 관리</router-link>
+    </div>
+    <div class="border-b-gray-200 border-b">
+      <router-link :to="{ name: 'ContactList', query: {} }" :class="this.active === 'contact' ? 'bg-blue-200 font-bold':''" class="w-full px-7 py-3 text-lg cursor-pointer inline-block">문의 관리</router-link>
+    </div>
+    <div class="border-b-gray-200 border-b">
+      <router-link :to="{ name: 'NoticeList', query: {} }" :class="this.active === 'notice' ? 'bg-blue-200 font-bold':''" class="w-full px-7 py-3 text-lg cursor-pointer inline-block">공지사항 관리</router-link>
+    </div>
+    <div class="border-b-gray-200 border-b">
+      <router-link :to="{ name: 'FaqList', query: {} }" :class="this.active === 'faq' ? 'bg-blue-200 font-bold':''" class="w-full px-7 py-3 text-lg cursor-pointer inline-block">FAQ 관리</router-link>
+    </div>
+    <div class="border-b-gray-200 border-b">
+      <router-link :to="{ name: 'AlertList', query: {} }" :class="this.active === 'alert' ? 'bg-blue-200 font-bold':''" class="w-full px-7 py-3 text-lg cursor-pointer inline-block">알림 관리</router-link>
+    </div>
+    <div class="border-b-gray-200 border-b">
+      <router-link :to="{ name: 'ManagerList', query: {} }" :class="this.active === 'manager' ? 'bg-blue-200 font-bold':''" class="w-full px-7 py-3 text-lg cursor-pointer inline-block">담당자 관리</router-link>
+    </div>
   </div>
 </template>
 

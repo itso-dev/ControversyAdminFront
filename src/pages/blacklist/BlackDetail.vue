@@ -76,7 +76,7 @@ export default {
     }
   },
   created() {
-    this.$parent.$parent.$refs.nav.activeBtn('popup');
+    this.$parent.$parent.$refs.nav.activeBtn('black');
   }
 };
 </script>
