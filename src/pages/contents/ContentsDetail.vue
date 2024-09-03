@@ -2,67 +2,49 @@
   <div class="px-8 py-8 ">
     <p class="text-2xl font-bold mb-5">콘텐츠 관리</p>
     <!--  Buttons  -->
-    <div class="mt-12 mb-5">
-      <span @click="this.contents_list.forEach(i => i.chk = true)"
-            class="inline-block px-5 py-1.5 rounded-lg bg-blue-400 text-white mr-3 hover:bg-blue-500 cursor-pointer">
-          전체 선택
+    <div class="w-full text-right mb-8">
+      <span class="mr-10 text-2xl cursor-pointer" @click="removeContents(this.contents)">
+          <i class="fas fa-trash-alt"></i>
       </span>
-      <span @click="removeContentsList"
-            class="inline-block px-5 py-1.5 rounded-lg bg-blue-400 text-white mr-3 hover:bg-blue-500 cursor-pointer">
-          선택 삭제
+      <span class=" text-2xl cursor-pointer" @click="goToDetail('ContentsSetting', this.contents)">
+          <i class="fas fa-pencil-alt"></i>
       </span>
-      <router-link :to="{ name: 'ContentsSetting', query: {} }"
-                   class="inline-block px-5 py-1.5 rounded-lg bg-fuchsia-700 text-white float-right hover:bg-fuchsia-800 cursor-pointer">
-        등록하기
-      </router-link>
     </div>
-    <!--  Table List  -->
-    <table class="w-full table-auto border-collapse text-center">
-      <thead class="border-y border-black">
-        <tr>
-          <th class="py-3">선택</th>
-          <th>콘텐츠 제목</th>
-          <th>생성일</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="cursor-pointer hover:bg-gray-100 border-b border-b-gray-200"
-            v-for="item in this.contents_list">
-          <td class="py-3"><input type="checkbox" :checked="item.chk" @click="item.chk = !item.chk"></td>
-          <td>
-            <router-link class="cursor-pointer" :to="{ name: 'ContentsList', query: {} }" >
-                {{ item.title }}
-            </router-link>
-          </td>
-          <td class="cursor-pointer">{{ formattedDate(item.reg_date) }}</td>
-          <td>
-            <span class="mr-5 text-2xl cursor-pointer">
-                <i class="fas fa-trash-alt"></i>
-            </span>
-            <span class=" text-2xl cursor-pointer">
-                <i class="fas fa-pencil-alt"></i>
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- Paging -->
-    <div class="m-auto w text-center flex justify-center gap-3 text-lg mt-10">
-      <a class="bg-gray-200 px-3 py-1" v-if="this.contents_pages.start !== 1" @click="onChangePage(this.contents_pages.start - 1)">
-        <i class="fas fa-chevron-left"></i>
-      </a>
-      <a class="bg-gray-400 px-3 py-1" :class="this.contents_pages.page == page ? 'font-bold' : ''" v-for="page in this.contents_pages.pagesList"
-         @click="onChangePage(page)">
-        {{ page }}
-      </a>
-      <a class="bg-gray-200 px-3 py-1" v-if="this.contents_pages.end !== this.contents_pages.end_page + 1"
-         @click="onChangePage(this.contents_pages.start + this.contents_pages.num_block)">
-        <i class="fas fa-chevron-right"></i>
-      </a>
+    <p class="text-center font-bold text-3xl mb-16 text-amber-700">{{this.title}}</p>
+    <div class="w-full flex gap-10 mb-10">
+      <div class="w-1/3 rounded-xl border px-5 py-4">
+        <p class="text-left text-lg mb-2">총 노출 횟수</p>
+        <p class="text-left font-bold text-3xl">{{ this.insertComma(this.viewCntTotal)}}</p>
+      </div>
+      <div class="w-1/3 rounded-xl border px-5 py-4">
+        <p class="text-left text-lg mb-2">오늘 노출 횟수</p>
+        <p class="text-left font-bold text-3xl">{{ this.insertComma(this.viewCntToday)}}</p>
+      </div>
+      <div class="w-1/3 rounded-xl border px-5 py-4">
+        <p class="text-left text-lg mb-2">총 공유 횟수</p>
+        <p class="text-left font-bold text-3xl">{{ this.insertComma(this.shareCntTotal)}}</p>
+      </div>
+    </div>
+    <div class="flex mb-10 w-4/5 m-auto align-middle">
+      <div class="w-2/5">
+        <img class="w-full rounded-2xl mb-5" :src="getFirstImagePath(this.file1)">
+        <p class="font-bold text-2xl mb-2">{{this.explanation1}}</p>
+        <p class="font-bold text-3xl">{{this.insertComma(this.type1CntTotal)}}</p>
+      </div>
+      <div class="w-1/5 text-center flex justify-center items-center">
+        <span class="font-extrabold text-5xl">VS</span>
+      </div>
+      <div class="w-2/5">
+        <img class="w-full rounded-2xl mb-5" :src="getFirstImagePath(this.file2)">
+        <p class="font-bold text-2xl mb-2">{{this.explanation2}}</p>
+        <p class="font-bold text-3xl">{{this.insertComma(this.type2CntTotal)}}</p>
+      </div>
+    </div>
+    <div class="flex border-t border-gray-300 px-5 py-5 mb-16">
+      <span class="text-xl mr-3 font-bold">스레드 URL:</span>
+      <a class="text-xl text-blue-400" :href="this.url">{{this.url}}</a>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -81,35 +63,63 @@ export default {
   },
   data() {
     return {
-      contents_list: [],
-      contents_list_total: 0,
-      contents_pages: {
-        page: 1,
-        page_block: 10,
-        start: 9999,
-        end: 1,
-        end_page: 1,
-        pagesList: [],
-        num_block: 5,
-      },
+      title: '',
+      contents: '',
+      explanation1: '',
+      explanation2: '',
+      file1:[],
+      file2:[],
+      url:'',
+      viewCntToday: '',
+      viewCntTotal: '',
+      shareCntTotal: '',
+      type1CntTotal: '',
+      type2CntTotal: '',
     }
   },
   methods: {
-    getContentsList() {
-      let params = {
-      }
-      this.contentsStore.list(params, {}).then((resp) => {
-        console.log(resp.data.code == 200);
+    insertComma(num){
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    },
+    getContents() {
+      this.contentsStore.getById(this.contents).then((resp) => {
         if (resp.data.code == 200) {
-          this.contents_list = resp.data.body;
+          this.title = resp.data.body.title;
+          this.explanation1 = resp.data.body.explanation1;
+          this.explanation2 = resp.data.body.explanation2;
+          this.url = resp.data.body.url;
+          this.file1 = resp.data.body.file1;
+          this.file2 = resp.data.body.file2;
         }
       }).catch(err => {
         console.log("err", err);
       });
     },
-    removeContentsList(){
-      let keyList = this.contents_list.filter(i => i.chk).map(i => i.notice);
-      this.contentsStore.remove({keyList:keyList}).then((resp) => {
+    getCnt() {
+      this.contentsStore.getCnt(this.contents).then((resp) => {
+        if (resp.data.code == 200) {
+          if(resp.data.body.type1CntTotal !== null && resp.data.body.type1CntTotal !== undefined) {
+            this.type1CntTotal = resp.data.body.type1CntTotal;
+          }
+          if(resp.data.body.type2CntTotal !== null && resp.data.body.type2CntTotal !== undefined) {
+            this.type2CntTotal = resp.data.body.type2CntTotal;
+          }
+          if(resp.data.body.viewCntTotal !== null && resp.data.body.viewCntTotal !== undefined) {
+            this.viewCntTotal = resp.data.body.viewCntTotal;
+          }
+          if(resp.data.body.viewCntToday !== null && resp.data.body.viewCntToday !== undefined) {
+            this.viewCntToday = resp.data.body.viewCntToday;
+          }
+          if(resp.data.body.shareCntTotal !== null && resp.data.body.shareCntTotal !== undefined) {
+            this.shareCntTotal = resp.data.body.shareCntTotal;
+          }
+        }
+      }).catch(err => {
+        console.log("err", err);
+      });
+    },
+    removeContents(id){
+      this.contentsStore.remove(id).then((resp) => {
         if (resp.data.code == 200) {
           alert('삭제되었습니다.');
           this.onChangePage(1);
@@ -118,13 +128,13 @@ export default {
         console.log("err", err);
       });
     },
-    onChangePage(page){
-      this.contents_pages.page = page;
-      this.getContentsList();
-    },
   },
   created() {
-    this.getContentsList();
+    if (this.$route.query.key != null) {
+      this.contents = this.$route.query.key;
+      this.getContents();
+      this.getCnt();
+    }
     this.$parent.$parent.$refs.nav.activeBtn('contents');
   }
 };

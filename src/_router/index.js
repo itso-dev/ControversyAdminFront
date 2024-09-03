@@ -1,42 +1,56 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeRoutes from "./home.routes.js";
-import MemberRoutes from "./member.routes.js";
-import BannerRoutes from "./banner.routes.js";
-import PopupRoutes from "./popup.routes.js";
-import PaymentRoutes from "./payment.routes.js";
-import BlacklistRoutes from "./blacklist.routes.js";
-import BoardRoutes from "./board.routes.js";
-import ContactRoutes from "./contact.routes.js";
-import NoticeRoutes from "./notice.routes.js";
-import AlertRoutes from "./alert.routes.js";
-import FaqRoutes from "./faq.routes.js";
-import ProjectRoutes from "./project.routes.js";
-import ManagerRoutes from "./manager.routes.js";
-import store from "@/_stores";
+import BannerRoutes from "./contents.routes.js";
+import {useCommonStore} from "@/_stores";
 
 const routes = [
         ...HomeRoutes,
-        ...MemberRoutes,
         ...BannerRoutes,
-        ...PopupRoutes,
-        ...PaymentRoutes,
-        ...BlacklistRoutes,
-        ...BoardRoutes,
-        ...ContactRoutes,
-        ...NoticeRoutes,
-        ...AlertRoutes,
-        ...FaqRoutes,
-        ...ProjectRoutes,
-        ...ManagerRoutes,
     { path: "/:pathMatch(.*)*", redirect: "/" },
 
 ];
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: routes,
-    linkActiveClass: "active",
-    linkExactActiveClass: "exact-active",
-});
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return { top: 0 }
+        }
+    }
+})
 
 export default router
+
+router.beforeEach(async (to) => {
+    // console.log(to)
+    // // redirect to login page if not logged in and trying to access a restricted page
+    const publicPages = [ "/login" // 로그인
+    ];
+    const authRequired = !publicPages.includes(to.path);
+    const commonStore = useCommonStore();
+    // console.log("before router auth", authStore.member, authStore.isAuthenticated, authStore.auth_token);
+    if (authRequired && !commonStore.isAuthenticated) {
+        commonStore.setReturnUrl(to.fullPath);
+        alert("로그인이 필요합니다.");
+        return "/login";
+    }
+});
+
+// save history stack
+router.afterEach((to, from, failure) => {
+    const title = to.meta.title
+    if (title) {
+        document.title = title
+    }
+    const commonStore = useCommonStore();
+    const isExpiryAuth = dayjs().isAfter(commonStore.expiryTime);
+
+    if (isExpiryAuth) {
+        alert("로그인이 만료되었습니다.");
+        commonStore.logout();
+    }
+});
+
