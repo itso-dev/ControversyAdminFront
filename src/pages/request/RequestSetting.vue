@@ -27,7 +27,8 @@
         <td class="w-1/12 px-5 py-5 bg-[#FFDBC1] font-semibold">A 이미지</td>
         <td class="w-1/3 px-5 py-3">
           <span class="inline-block text-sm px-4 py-2 cursor-pointer rounded-full text-violet-700 font-bold bg-violet-50 hover:file:bg-violet-100"
-                 @click="addFiles(this.$refs.file1_new);" v-if="(this.file1_new.length + this.file1.length) === 0"
+                 @click="addFiles(this.$refs.file1_new);" 
+                 v-if="(!this.file1_new || this.file1_new.length === 0) && (!this.file1 || this.file1.length === 0)"
           >파일 선택</span>
           <input type="file"
                  v-on:change="handleUpload(this.$refs.file1_new.files, this.file1_new)"
@@ -53,7 +54,8 @@
         <td class="w-1/12 px-5 py-5 bg-[#FFDBC1] font-semibold">B 이미지</td>
         <td class="w-1/3 px-5 py-3">
           <span class="inline-block text-sm px-4 py-2 cursor-pointer rounded-full text-violet-700 font-bold bg-violet-50 hover:file:bg-violet-100"
-                @click="addFiles(this.$refs.file2_new);" v-if="(this.file2_new.length + this.file2.length) === 0"
+                @click="addFiles(this.$refs.file2_new);" 
+                v-if="(!this.file2_new || this.file2_new.length === 0) && (!this.file2 || this.file2.length === 0)"
           >파일 선택</span>
             <input type="file"
                    v-on:change="handleUpload(this.$refs.file2_new.files, this.file2_new)"
@@ -71,8 +73,8 @@
     </table>
 
     <div class="mt-20 flex justify-center items-center gap-2">
-      <router-link :to="{ name: 'ContentsList' }" class="w-1/12 py-3 cursor-pointer text-center rounded-2xl text-primary border border-primary">목록</router-link>
-      <p class="block w-1/12 text-center bg-primary border border-primary rounded-2xl text-white py-3 cursor-pointer" @click="saveContents()">완료</p>
+      <router-link :to="{ name: 'RequestList' }" class="w-1/12 py-3 cursor-pointer text-center rounded-2xl text-primary border border-primary">목록</router-link>
+      <p class="block w-1/12 text-center bg-primary border border-primary rounded-2xl text-white py-3 cursor-pointer" @click="modifyContents()">완료</p>
     </div>
   </div>
 </template>
@@ -134,7 +136,7 @@ export default {
         console.log("err", err);
       });
     },
-    saveContents() {
+    modifyContents() {
       console.log(this.file1_new);
 
 
@@ -154,8 +156,8 @@ export default {
       if(this.contents === 0){
         this.contentsStore.save(paramData).then((resp) => {
           if (resp.data.code == 200) {
-            alert('등록되었습니다.');
-            this.goToPage('ContentsList');
+            alert('수정되었습니다.');
+            this.goToPage('RequestList');
           }
         }).catch(err => {
           console.log("err", err);
@@ -170,7 +172,7 @@ export default {
         this.contentsStore.modify(this.contents, paramData).then((resp) => {
           if (resp.data.code == 200) {
             alert('수정되었습니다.');
-            this.goToPage('ContentsList');
+            this.goToPage('RequestList');
           }
         }).catch(err => {
           console.log("err", err);
@@ -183,7 +185,7 @@ export default {
       this.contents = this.$route.query.key;
       this.getContents();
     }
-    this.$parent.$parent.$refs.nav.activeBtn('contents');
+    this.$parent.$parent.$refs.nav.activeBtn('request');
   }
 };
 </script>

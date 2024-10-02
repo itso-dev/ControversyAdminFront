@@ -1,6 +1,6 @@
 <template>
   <div class="px-8 py-8 ">
-    <p class="text-2xl font-bold mb-5">콘텐츠 관리</p>
+    <p class="text-2xl font-bold mb-5">신청 콘텐츠 관리</p>
     <!--  Buttons  -->
     <div class="mt-12 mb-5">
 <!--      <span @click="this.contents_list.forEach(i => i.chk = true)"-->
@@ -11,10 +11,10 @@
 <!--            class="inline-block px-5 py-1.5 rounded-lg bg-blue-400 text-white mr-3 hover:bg-blue-500 cursor-pointer">-->
 <!--          선택 삭제-->
 <!--      </span>-->
-      <router-link :to="{ name: 'ContentsSetting', query: {} }"
+      <!-- <router-link :to="{ name: 'ContentsSetting', query: {} }"
           class="inline-block px-5 py-1.5 rounded-lg bg-[#FF7F50] text-white hover:bg-primary cursor-pointer">
         등록하기
-      </router-link>
+      </router-link> -->
     </div>
     <!--  Table List  -->
     <table class="w-full table-auto border-collapse text-center">
@@ -31,7 +31,7 @@
             v-for="item in this.contents_list">
 <!--          <td class="py-3"><input type="checkbox" :checked="item.chk" @click="item.chk = !item.chk"></td>-->
           <td class="py-3">
-            <span class="cursor-pointer" @click="goToDetail('ContentsDetail', item.contents)">
+            <span class="cursor-pointer" @click="goToDetail('RequestDetail', item.contents)">
                 {{ item.title }}
             </span>
           </td>
@@ -40,7 +40,7 @@
             <span class="mr-5 text-2xl cursor-pointer" @click="removeContents(item.contents)">
                 <i class="fas fa-trash-alt"></i>
             </span>
-            <span class=" text-2xl cursor-pointer" @click="goToDetail('ContentsSetting', item.contents)">
+            <span class=" text-2xl cursor-pointer" @click="goToDetail('RequestSetting', item.contents)">
                 <i class="fas fa-pencil-alt"></i>
             </span>
           </td>
@@ -97,7 +97,7 @@ export default {
   methods: {
     getContentsList() {
       let params = {
-        contentState : 2,
+        contentState : 1,
       }
       this.contentsStore.list(params, {}).then((resp) => {
         console.log(resp.data.code == 200);
@@ -136,7 +136,7 @@ export default {
   },
   created() {
     this.getContentsList();
-    this.$parent.$parent.$refs.nav.activeBtn('contents');
+    this.$parent.$parent.$refs.nav.activeBtn('request');
   }
 };
 </script>

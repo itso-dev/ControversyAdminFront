@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeRoutes from "./home.routes.js";
 import BannerRoutes from "./contents.routes.js";
+import RequestRoutes from "./request.routes.js";
 import {useCommonStore} from "@/_stores";
 
 const routes = [
         ...HomeRoutes,
         ...BannerRoutes,
+        ...RequestRoutes,
     { path: "/:pathMatch(.*)*", redirect: "/" },
 
 ];

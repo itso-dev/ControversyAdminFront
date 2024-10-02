@@ -3,7 +3,7 @@
     <p class="text-2xl font-bold mb-5">콘텐츠 관리</p>
     <!--  Buttons  -->
     <div class="w-full flex justify-between items-center mb-8">
-      <router-link :to="{ name: 'ContentsList' }" class="w-1/12 py-2 cursor-pointer text-center rounded-2xl text-primary border border-primary hover:bg-primary hover:text-[#FFF]">목록</router-link>
+      <router-link :to="{ name: 'RequestList' }" class="w-1/12 py-2 cursor-pointer text-center rounded-2xl text-primary border border-primary hover:bg-primary hover:text-[#FFF]">목록</router-link>
       <div class="flex items-center gap-5">
         <span class="text-2xl cursor-pointer" @click="removeContents(this.contents)">
           <i class="fas fa-trash-alt"></i>
